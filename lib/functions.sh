@@ -1,6 +1,5 @@
-BASHOG_INSTALL_DIR="${curr_script_dir}/vendor"
+BASHOG_INSTALL_DIR="$(pwd)/vendor"
 BASHOG_AUTOLOADER="$BASHOG_INSTALL_DIR/autoloader.sh"
-BASHOG_FEED_FILENAME="feed.hog"
 BASHOG_COLOR_RED=31
 BASHOG_COLOR_GREEN=32
 BASHOG_COLOR_BLUE=94
@@ -76,7 +75,7 @@ function bashog.run()
 	bashog.print_info "Fetching all dependencies..."
 	local -a libs=()
 	local -a properties=()
-	bashog.parse_config "${BASHOG_FEED_FILENAME}" properties
+	bashog.parse_config "$1" properties
 	for line in "${properties[@]}"
 	do
 		dep=$(echo $line | awk -F"|" '{ print $1 }')
