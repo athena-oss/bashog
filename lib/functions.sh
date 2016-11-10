@@ -84,18 +84,27 @@ function bashog.run()
 	bashog.print_info "Fetching all dependencies..."
 	local -a libs=()
 	local -a properties=()
+	local name
 	bashog.parse_config "$1" properties
 	for line in "${properties[@]}"
 	do
 		dep=$(echo $line | awk -F"|" '{ print $1 }')
 		url=$(echo $line | awk -F"|"  '{ print $2 }')
 		version=$(echo $line | awk -F"|"  '{ print $3 }')
-		libs+=("$(echo $line | awk -F"|" '{ print $1"/"$4 }')")
-		bashog.fetch "$dep" "$url" "$version"
+		name=$(basename $url)
+		name=${name//.git/}
+		libs+=("$(echo $line | awk -v name=$name -F"|" '{ print name"/"$4 }')")
+		bashog.print_info "Fetching '$dep'"
+		bashog.fetch "$name" "$url" "$version"
 	done
 
-	bashog.create_autoloader "${libs[@]}"
-	bashog.print_ok "All dependencies were fetched."
+	if bashog.create_autoloader "${libs[@]}" ; then
+		bashog.print_ok "All dependencies were fetched."
+		return 0
+	fi
+
+	bashog.print_warn "There was a problem creating the autoloader!"
+	return 1
 }
 
 # This function fetches the specified dependency.
@@ -110,8 +119,6 @@ function bashog.fetch()
 	if [ -z "$2" ]; then
 		bashog.print_error "Dependency URL not specified!"
 	fi
-
-	bashog.print_info "Fetching '$1'"
 
 	# ensure that vendor dir exists
 	if [ ! -d "${BASHOG_INSTALL_DIR}" ]; then
@@ -133,7 +140,7 @@ function bashog.fetch()
 	rc=$?
 
 	if [ $rc -ne 0 ]; then
-		bashog.print_error "There was a problem fetching the dependencies!"
+		bashog.print_error "There was a problem fetching '$1'!"
 	fi
 
 	return $rc
@@ -150,14 +157,18 @@ function bashog.fetch_from_repo()
 	# download using wget
 	cd "${BASHOG_INSTALL_DIR}"
 	if which wget 1>/dev/null 2>/dev/null ; then
-		wget -q -O - "$url" | tar xz &&  mv "${1}-${3}" "$1"
+		if wget -q -O - "$url" | tar xz && [ ${PIPESTATUS[0]} -eq 0 ]; then
+			mv "${1}-${3}" "$1"
+		fi
 	# download using curl
 	elif which curl 1>/dev/null 2>/dev/null; then
-		curl -sL "$url" | tar xz && mv "${1}-${3}" "$1"
+		if curl -sL "$url" | tar xz && [ ${PIPESTATUS[0]} -eq 0 ]; then
+			mv "${1}-${3}" "$1"
+		fi
 	else
 		bashog.print_error "You need to install either wget or curl!"
 	fi
-	rc=$?
+	rc=${PIPESTATUS[0]}
 	cd "$workdir"
 	return $rc
 }
