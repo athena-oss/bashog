@@ -50,14 +50,14 @@ version=0.3.0
 ```
 ## 1. Declaring dependencies in `feed.hog`
 
-### 1.1 using version in master
+### 1.1 using version in master (`git` only)
 ```bash
 [bashunit]
 url=git@github.com:athena-oss/bashunit.git
 lib_dir=lib
 ```
 
-### 1.2 using a specific version (curl or wget only)
+### 1.2 using a specific version (`curl` or `wget` only)
 ```bash
 [bashunit]
 url=athena-oss/bashunit
