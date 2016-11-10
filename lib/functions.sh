@@ -3,6 +3,7 @@ BASHOG_AUTOLOADER="$BASHOG_INSTALL_DIR/autoloader.sh"
 BASHOG_COLOR_RED=31
 BASHOG_COLOR_GREEN=32
 BASHOG_COLOR_BLUE=94
+BASHOG_COLOR_YELLOW=43
 
 # This function prints a message with the given color code and type.
 # USAGE: bashog.print <color_code> <type> <message>
@@ -11,7 +12,7 @@ function bashog.print()
 {
 	local color=$(printf "\033[$1m")
 	local normal=$(printf "\033[m")
-	printf "%s%b%s\n" "${color}" "[$2] $normal" "$3"
+	printf "%s%b%s\n" "${color}" "[$2]$normal " "$3"
 }
 
 # This function prints an ok message.
@@ -29,6 +30,14 @@ function bashog.print_error()
 {
 	bashog.print "$BASHOG_COLOR_RED" "ERROR" "$1"
 	exit 1
+}
+
+# This function prints a warning  message and exits with code 1.
+# USAGE: bashog.print_warn <message>
+# RETURNS: --
+function bashog.print_warn()
+{
+	bashog.print "$BASHOG_COLOR_YELLOW" "WARN" "$1"
 }
 
 # This function prints an info message.
