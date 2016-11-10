@@ -125,6 +125,11 @@ function bashog.fetch()
 		mkdir ${BASHOG_INSTALL_DIR}
 	fi
 
+	# remove old if exists
+	if [ -d "${BASHOG_INSTALL_DIR}/$1" ]; then
+		rm -rf "${BASHOG_INSTALL_DIR}/$1"
+	fi
+
 	local rc=0
 	case "$2" in
 		*.git)
