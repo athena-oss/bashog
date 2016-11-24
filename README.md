@@ -1,4 +1,4 @@
-# basHog
+# basHog [![Build Status](https://travis-ci.org/athena-oss/bashog.svg?branch=master)](https://travis-ci.org/athena-oss/bashog)
 
 basHog is a dependency manager for bash and it allows you to use other projects in your own project.
 
