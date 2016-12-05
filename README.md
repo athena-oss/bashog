@@ -10,11 +10,27 @@ Prerequisites
 
 There are three quick start options available:
 
-* On MAC OSX using [Homebrew](http://brew.sh/) :
+**On Linux**
+
+* Using `apt-get` :
+
+```bash
+$ sudo add-apt-repository ppa:athena-oss/athena
+$ sudo apt-get update
+$ sudo apt-get install bashog
+```
+
+**On MAC OSX**
+
+* Using [Homebrew](http://brew.sh/) :
+
 ```bash
 $ brew tap athena-oss/tap
 $ brew install bashog
 ```
+
+**Alternative**
+
 * [Download the latest release](https://github.com/athena-oss/bashog/releases/latest)
 * Clone the repo: `git clone https://github.com/athena-oss/bashog.git`
 
